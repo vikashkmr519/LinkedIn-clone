@@ -1,9 +1,13 @@
 import React from "react";
 import styled from "styled-components";
+import { connect } from "react-redux";
+import { signInAPI } from "../actions";
+import { Redirect } from "react-router";
 
-function Login() {
+const Login = (props) => {
   return (
     <Container>
+      {props.user && <Redirect to="/home" />}
       <Nav>
         <a herf="/">
           <img src="/images/login-logo.svg"></img>
@@ -19,7 +23,7 @@ function Login() {
           <img src="/images/login-hero.svg"></img>
         </Hero>
         <Form>
-          <Google>
+          <Google onClick={() => props.signIn()}>
             <img src="/images/google.svg" alt="" />
             Sign in with Google
           </Google>
@@ -27,7 +31,7 @@ function Login() {
       </Section>
     </Container>
   );
-}
+};
 
 const Container = styled.div`
   padding: 0px;
@@ -156,7 +160,7 @@ const Google = styled.button`
   box-shadow: inset 0 0 0 1px rgb(0 0 0 / 60%),
     inset 0 0 0 2px rgb(0 0 0 / 0%) inset 0 0 0 1px rgb(0 0 0 / 0%);
   vertical-align: middle;
-  z-z-index: 0;
+  z-index: 0;
   transition-duration: 167ms;
   font-size: 20px;
   color: rgba(0, 0, 0, 0.6);
@@ -167,4 +171,14 @@ const Google = styled.button`
   }
 `;
 
-export default Login;
+const mapStateToProps = (state) => {
+  return {
+    user: state.userState.user,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  signIn: () => dispatch(signInAPI()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
